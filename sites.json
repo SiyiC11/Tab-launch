@@ -1,8 +1,34 @@
 [
-  { "name": "RadiAI.Care", "url": "https://radi-ai-care.streamlit.app/" },
-  { "name": "ChatGPT", "url": "https://chatgpt.com" },
-  { "name": "Claude", "url": "https://claude.ai" },
-  { "name": "Gmail", "url": "https://mail.google.com" },
-  { "name": "Outlook", "url": "https://outlook.live.com" },
-  { "name": "LinkedIn", "url": "https://linkedin.com" }
+  {
+    "name": "RadiAI.Care",
+    "url": "https://radi-ai-care.streamlit.app/"
+  },
+  {
+    "name": "ChatGPT",
+    "url": "https://chatgpt.com"
+  },
+  {
+    "name": "Claude",
+    "url": "https://claude.ai"
+  },
+  {
+    "name": "Gmail",
+    "url": "https://mail.google.com"
+  },
+  {
+    "name": "Outlook",
+    "url": "https://outlook.live.com"
+  },
+  {
+    "name": "LinkedIn",
+    "url": "https://linkedin.com"
+  },
+  {
+    "name": "streamframe",
+    "url": "https://streamframe.fyi"
+  },
+  {
+    "name": "Twitch",
+    "url": "https://m.twitch.tv"
+  }
 ]
