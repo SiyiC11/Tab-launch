@@ -15,7 +15,6 @@
       --muted: #8b93b0;
       --teal: #4fd1c5;
       --ember: #ff9f43;
-      --flame: #ff5e3a;
       --red: #ff6b6b;
       --display: 'Chakra Petch', 'Noto Sans TC', sans-serif;
       --body: 'Noto Sans TC', sans-serif;
@@ -23,126 +22,78 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html, body { min-height: 100%; }
-
+    html, body { height: 100%; }
     body {
       background: var(--bg);
       color: var(--text);
       font-family: var(--body);
-      overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 48px 20px 64px;
-    }
-
-    /* ---------- starfield ---------- */
-    .stars {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
       overflow: hidden;
     }
+    [hidden] { display: none !important; }
+
+    /* ---------- starfield ---------- */
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
     .stars span {
       position: absolute;
-      width: 2px;
-      height: 2px;
+      width: 2px; height: 2px;
       border-radius: 50%;
       background: #fff;
       opacity: var(--o, 0.4);
-      top: var(--y);
-      left: var(--x);
+      top: var(--y); left: var(--x);
     }
-    body.liftoff .stars span {
-      animation: streak 1.4s cubic-bezier(.5, 0, .8, 1) forwards;
-    }
+    body.liftoff .stars span { animation: streak 1.4s cubic-bezier(.5, 0, .8, 1) forwards; }
     @keyframes streak {
       from { transform: translateY(0) scaleY(1); }
       to   { transform: translateY(120vh) scaleY(14); opacity: 0.15; }
     }
 
-    main {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 520px;
-    }
-
-    /* ---------- launch pad ---------- */
+    /* ---------- launch pad (center) ---------- */
     .pad {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-bottom: 40px;
+      justify-content: center;
+      transition: opacity .25s ease, filter .25s ease;
     }
+    body.editing .pad { opacity: .18; filter: blur(2px); pointer-events: none; }
+
     .rocket-wrap {
       position: relative;
-      height: 150px;
-      width: 120px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      margin-bottom: 8px;
+      height: 200px; width: 160px;
+      display: flex; align-items: flex-end; justify-content: center;
+      margin-bottom: 26px;
     }
-    .rocket {
-      width: 56px;
-      height: 120px;
-      position: relative;
-      transform-origin: 50% 100%;
-    }
+    .rocket { width: 72px; height: 170px; position: relative; transform-origin: 50% 100%; }
     .rocket svg { width: 100%; height: 100%; display: block; overflow: visible; }
-    .flame {
-      opacity: 0;
-      transform-origin: 50% 0%;
-    }
+    .flame { opacity: 0; transform-origin: 50% 0%; }
     .pad.ignite .rocket { animation: shake 0.45s linear infinite; }
-    .pad.ignite .flame, .pad.liftoff .flame {
-      opacity: 1;
-      animation: flicker 0.12s linear infinite alternate;
-    }
-    .pad.liftoff .rocket {
-      animation: liftoff 1.3s cubic-bezier(.55, 0, .9, .3) forwards;
-    }
+    .pad.ignite .flame, .pad.liftoff .flame { opacity: 1; animation: flicker 0.12s linear infinite alternate; }
+    .pad.liftoff .rocket { animation: liftoff 1.3s cubic-bezier(.55, 0, .9, .3) forwards; }
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-1.5px) rotate(-0.6deg); }
       75% { transform: translateX(1.5px) rotate(0.6deg); }
     }
-    @keyframes flicker {
-      from { transform: scaleY(0.85) scaleX(0.95); }
-      to   { transform: scaleY(1.25) scaleX(1.05); }
-    }
-    @keyframes liftoff {
-      0%   { transform: translateY(0); opacity: 1; }
-      100% { transform: translateY(-110vh); opacity: 1; }
-    }
+    @keyframes flicker { from { transform: scaleY(0.85) scaleX(0.95); } to { transform: scaleY(1.25) scaleX(1.05); } }
+    @keyframes liftoff { 0% { transform: translateY(0); } 100% { transform: translateY(-110vh); } }
     .ground {
-      position: absolute;
-      bottom: -2px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 96px;
-      height: 3px;
-      border-radius: 2px;
+      position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%);
+      width: 120px; height: 3px; border-radius: 2px;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
     }
     .smoke {
-      position: absolute;
-      bottom: -6px;
-      left: 50%;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
+      position: absolute; bottom: -6px; left: 50%;
+      width: 12px; height: 12px; border-radius: 50%;
       background: rgba(255,255,255,.14);
-      opacity: 0;
-      pointer-events: none;
+      opacity: 0; pointer-events: none;
     }
     .pad.liftoff .smoke { animation: puff 1.1s ease-out forwards; }
     @keyframes puff {
       0%   { transform: translate(-50%, 0) scale(1); opacity: .6; }
-      100% { transform: translate(calc(-50% + var(--dx)), 10px) scale(9); opacity: 0; }
+      100% { transform: translate(calc(-50% + var(--dx)), 10px) scale(10); opacity: 0; }
     }
 
     .launch {
@@ -152,119 +103,148 @@
       color: var(--teal);
       font-family: var(--display);
       font-weight: 600;
-      font-size: 1.15rem;
-      letter-spacing: .08em;
+      font-size: 1.3rem;
+      letter-spacing: .1em;
       text-transform: uppercase;
-      padding: 16px 40px;
+      padding: 18px 52px;
       border-radius: 999px;
       cursor: pointer;
       transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
-      box-shadow: 0 0 0 0 rgba(79,209,197,0);
     }
     .launch .n { font-family: var(--mono); font-weight: 400; margin-left: .35em; opacity: .85; }
-    .launch:hover { box-shadow: 0 0 32px rgba(79,209,197,.28); background: linear-gradient(180deg, rgba(79,209,197,.24), rgba(79,209,197,.1)); }
+    .launch:hover { box-shadow: 0 0 36px rgba(79,209,197,.28); background: linear-gradient(180deg, rgba(79,209,197,.24), rgba(79,209,197,.1)); }
     .launch:active { transform: scale(.97); }
     .launch:focus-visible { outline: 2px solid var(--teal); outline-offset: 4px; }
     .launch:disabled { opacity: .45; cursor: default; box-shadow: none; }
 
     .hint {
-      margin-top: 14px;
+      margin-top: 16px;
       font-family: var(--mono);
-      font-size: .78rem;
+      font-size: .8rem;
       color: var(--muted);
       min-height: 1.2em;
       text-align: center;
     }
     .hint.warn { color: var(--ember); }
+    .hint.ok { color: var(--teal); }
 
-    /* ---------- manifest ---------- */
-    .manifest {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      overflow: hidden;
+    /* ---------- mini list (bottom-left) ---------- */
+    .mini {
+      position: fixed;
+      left: 28px; bottom: 28px;
+      z-index: 2;
+      list-style: none;
+      display: flex; flex-direction: column; gap: 2px;
+      transition: opacity .25s ease;
     }
-    .manifest-head {
-      display: flex;
+    body.editing .mini { opacity: .18; pointer-events: none; }
+    .mini li, .mini a {
+      display: grid;
+      grid-template-columns: 16px 1fr 8px;
+      gap: 10px;
       align-items: center;
-      justify-content: space-between;
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--line);
-    }
-    .manifest-head h2 {
-      font-family: var(--display);
-      font-weight: 500;
-      font-size: .82rem;
-      letter-spacing: .18em;
-      text-transform: uppercase;
+      padding: 5px 8px 5px 6px;
+      margin-left: -6px;
+      border-radius: 7px;
+      min-width: 170px;
       color: var(--muted);
+      text-decoration: none;
+      font-size: .8rem;
+      line-height: 1.2;
+      cursor: default;
     }
-    .manifest-head h2 .n { color: var(--teal); margin-left: .5em; font-family: var(--mono); letter-spacing: 0; }
-    .icon-btn {
+    .mini a { cursor: pointer; }
+    .mini a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .mini .fav {
+      width: 16px; height: 16px; border-radius: 4px;
+      background: #1c2446;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      font-family: var(--display); font-weight: 600; font-size: .6rem; color: var(--teal);
+    }
+    .mini .fav img { width: 16px; height: 16px; display: block; }
+    .mini .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: rgba(255,255,255,.16);
+      transition: background .25s, box-shadow .25s;
+    }
+    .ok .dot { background: var(--teal); box-shadow: 0 0 8px rgba(79,209,197,.6); }
+    .ok { color: var(--text); }
+    .blocked .dot { background: var(--red); box-shadow: 0 0 8px rgba(255,107,107,.5); }
+    .blocked { color: var(--red) !important; }
+    .warming .dot { background: var(--ember); animation: pulse 1s ease-in-out infinite; }
+    .warm .dot { background: rgba(255,159,67,.5); }
+    @keyframes pulse { 50% { opacity: .3; } }
+
+    /* ---------- edit button (bottom-right) ---------- */
+    .edit-fab {
+      position: fixed;
+      right: 28px; bottom: 28px;
+      z-index: 2;
       appearance: none;
-      background: transparent;
-      border: 1px solid transparent;
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--surface);
       color: var(--muted);
-      width: 32px; height: 32px;
-      border-radius: 8px;
       cursor: pointer;
       display: inline-flex; align-items: center; justify-content: center;
       transition: color .15s, border-color .15s, background .15s;
     }
-    .icon-btn:hover { color: var(--text); border-color: var(--line); background: rgba(255,255,255,.03); }
-    .icon-btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
-    .icon-btn svg { width: 16px; height: 16px; }
+    .edit-fab:hover { color: var(--text); border-color: rgba(255,255,255,.18); }
+    .edit-fab:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+    .edit-fab svg { width: 18px; height: 18px; }
+    body.editing .edit-fab { display: none; }
 
-    ul.sites { list-style: none; }
-    .site {
+    /* ---------- editor panel (center) ---------- */
+    .panel {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .panel .card {
+      width: 100%; max-width: 560px;
+      max-height: calc(100vh - 48px);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      animation: rise .2s ease-out;
+    }
+    @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    .panel-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .panel-head h2 {
+      font-family: var(--display);
+      font-weight: 500; font-size: .85rem;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .panel-head h2 .n { color: var(--teal); margin-left: .5em; font-family: var(--mono); letter-spacing: 0; }
+    .panel-body { overflow-y: auto; }
+    .edit-row {
       display: grid;
-      grid-template-columns: 36px 1fr auto;
+      grid-template-columns: 28px 1fr auto;
       gap: 14px;
       align-items: center;
-      padding: 12px 18px;
+      padding: 12px 20px;
       border-bottom: 1px solid var(--line);
-      text-decoration: none;
-      color: inherit;
     }
-    .site:last-child { border-bottom: none; }
-    a.site:hover { background: rgba(255,255,255,.03); }
-    .fav {
-      width: 36px; height: 36px;
-      border-radius: 9px;
+    .edit-row .fav {
+      width: 28px; height: 28px; border-radius: 7px;
       background: #1c2446;
       display: flex; align-items: center; justify-content: center;
       overflow: hidden;
-      font-family: var(--display);
-      font-weight: 600;
-      color: var(--teal);
+      font-family: var(--display); font-weight: 600; font-size: .8rem; color: var(--teal);
     }
-    .fav img { width: 20px; height: 20px; display: block; }
-    .site .name { font-weight: 500; font-size: .97rem; line-height: 1.25; }
-    .site .host { font-family: var(--mono); font-size: .74rem; color: var(--muted); margin-top: 2px; }
-    .status {
-      display: flex; align-items: center; gap: 8px;
-      font-family: var(--mono);
-      font-size: .72rem;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-    .dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: rgba(255,255,255,.18);
-      transition: background .25s, box-shadow .25s;
-    }
-    .site.ok .dot { background: var(--teal); box-shadow: 0 0 10px rgba(79,209,197,.6); }
-    .site.ok .status { color: var(--teal); }
-    .site.blocked .dot { background: var(--red); box-shadow: 0 0 10px rgba(255,107,107,.5); }
-    .site.blocked .status { color: var(--red); }
-    .site.warming .dot { background: var(--ember); animation: pulse 1s ease-in-out infinite; }
-    .site.warming .status { color: var(--ember); }
-    .site.warm .status { color: var(--muted); }
-    .site.warm .dot { background: rgba(255,159,67,.55); }
-    @keyframes pulse { 50% { opacity: .35; } }
-
-    /* ---------- edit mode ---------- */
-    .manifest.editing .site { grid-template-columns: 36px 1fr auto; }
+    .edit-row .fav img { width: 18px; height: 18px; display: block; }
     .edit-fields { display: grid; gap: 6px; }
     .edit-fields input {
       width: 100%;
@@ -279,16 +259,29 @@
     .edit-fields input.url { font-family: var(--mono); font-size: .78rem; }
     .edit-fields input:focus { outline: none; border-color: rgba(79,209,197,.6); }
     .row-actions { display: flex; gap: 2px; }
-    .row-actions .icon-btn { width: 28px; height: 28px; }
-    .row-actions .icon-btn:disabled { opacity: .25; cursor: default; }
-    .edit-foot {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 18px;
+    .icon-btn {
+      appearance: none;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--muted);
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: color .15s, border-color .15s, background .15s;
+    }
+    .icon-btn:hover { color: var(--text); border-color: var(--line); background: rgba(255,255,255,.03); }
+    .icon-btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+    .icon-btn:disabled { opacity: .25; cursor: default; background: none; border-color: transparent; }
+    .icon-btn svg { width: 16px; height: 16px; }
+    .empty { padding: 28px 20px; color: var(--muted); font-size: .88rem; text-align: center; }
+    .panel-foot {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 20px;
       border-top: 1px solid var(--line);
       gap: 10px;
     }
+    .panel-foot .right { display: flex; gap: 8px; }
     .btn {
       appearance: none;
       border: 1px solid var(--line);
@@ -306,10 +299,8 @@
     .btn.primary:hover { background: rgba(79,209,197,.12); }
     .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
     .btn:disabled { opacity: .4; cursor: default; }
-    .edit-foot .right { display: flex; gap: 8px; }
-    [hidden] { display: none !important; }
 
-    /* ---------- modal ---------- */
+    /* ---------- token modal ---------- */
     .modal {
       position: fixed; inset: 0; z-index: 10;
       background: rgba(5, 8, 18, .72);
@@ -322,6 +313,7 @@
       border: 1px solid var(--line);
       border-radius: 18px;
       padding: 22px;
+      animation: rise .2s ease-out;
     }
     .modal h3 { font-family: var(--display); font-weight: 500; font-size: 1rem; letter-spacing: .04em; margin-bottom: 8px; }
     .modal p { color: var(--muted); font-size: .85rem; line-height: 1.55; margin-bottom: 14px; }
@@ -334,7 +326,7 @@
       padding: 11px 12px;
       font-family: var(--mono);
       font-size: .82rem;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .modal input:focus { outline: none; border-color: rgba(79,209,197,.6); }
     .modal .actions { display: flex; justify-content: flex-end; gap: 8px; }
@@ -343,7 +335,7 @@
     /* ---------- toast ---------- */
     .toast {
       position: fixed;
-      left: 50%; bottom: 28px;
+      left: 50%; bottom: 36px;
       transform: translate(-50%, 20px);
       background: var(--surface);
       border: 1px solid var(--line);
@@ -351,26 +343,16 @@
       font-size: .88rem;
       padding: 11px 18px;
       border-radius: 999px;
-      opacity: 0;
-      pointer-events: none;
+      opacity: 0; pointer-events: none;
       transition: opacity .2s, transform .2s;
       z-index: 20;
-      max-width: calc(100% - 40px);
     }
     .toast.show { opacity: 1; transform: translate(-50%, 0); }
     .toast.bad { border-color: rgba(255,107,107,.5); }
 
-    .foot {
-      margin-top: 22px;
-      text-align: center;
-      font-family: var(--mono);
-      font-size: .7rem;
-      color: rgba(139,147,176,.6);
-    }
-
     @media (prefers-reduced-motion: reduce) {
       .pad.ignite .rocket, .pad.liftoff .rocket, .pad.liftoff .smoke,
-      body.liftoff .stars span, .flame, .site.warming .dot { animation: none !important; }
+      body.liftoff .stars span, .flame, .warming .dot, .panel .card, .modal .card { animation: none !important; }
       .pad.liftoff .rocket { opacity: .35; }
     }
   </style>
@@ -378,67 +360,74 @@
 <body>
   <div class="stars" id="stars" aria-hidden="true"></div>
 
-  <main>
-    <section class="pad" id="pad">
-      <div class="rocket-wrap" aria-hidden="true">
-        <div class="rocket">
-          <svg viewBox="0 0 56 140" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bodyG" x1="0" x2="1">
-                <stop offset="0" stop-color="#d9deef"/>
-                <stop offset=".55" stop-color="#ffffff"/>
-                <stop offset="1" stop-color="#aab2cc"/>
-              </linearGradient>
-              <linearGradient id="flameG" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#fff2b3"/>
-                <stop offset=".45" stop-color="#ff9f43"/>
-                <stop offset="1" stop-color="#ff5e3a" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <g class="flame">
-              <path d="M20 108 Q28 140 36 108 Z" fill="url(#flameG)"/>
-              <path d="M24 108 Q28 126 32 108 Z" fill="#fff8d6" opacity=".9"/>
-            </g>
-            <path d="M12 98 L4 118 L14 108 Z" fill="#4fd1c5"/>
-            <path d="M44 98 L52 118 L42 108 Z" fill="#4fd1c5"/>
-            <path d="M28 4 C40 22 42 50 42 96 L14 96 C14 50 16 22 28 4 Z" fill="url(#bodyG)"/>
-            <path d="M28 4 C36 16 39 30 40 44 L16 44 C17 30 20 16 28 4 Z" fill="#3a4470" opacity=".85"/>
-            <circle cx="28" cy="58" r="7" fill="#0b1020"/>
-            <circle cx="28" cy="58" r="5" fill="#4fd1c5"/>
-            <rect x="18" y="96" width="20" height="10" rx="2" fill="#3a4470"/>
-          </svg>
-        </div>
-        <div class="ground"></div>
-        <div class="smoke" style="--dx:-40px"></div>
-        <div class="smoke" style="--dx:40px"></div>
-        <div class="smoke" style="--dx:0px"></div>
+  <!-- center -->
+  <section class="pad" id="pad">
+    <div class="rocket-wrap" aria-hidden="true">
+      <div class="rocket">
+        <svg viewBox="0 0 56 140" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bodyG" x1="0" x2="1">
+              <stop offset="0" stop-color="#d9deef"/>
+              <stop offset=".55" stop-color="#ffffff"/>
+              <stop offset="1" stop-color="#aab2cc"/>
+            </linearGradient>
+            <linearGradient id="flameG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#fff2b3"/>
+              <stop offset=".45" stop-color="#ff9f43"/>
+              <stop offset="1" stop-color="#ff5e3a" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <g class="flame">
+            <path d="M20 108 Q28 140 36 108 Z" fill="url(#flameG)"/>
+            <path d="M24 108 Q28 126 32 108 Z" fill="#fff8d6" opacity=".9"/>
+          </g>
+          <path d="M12 98 L4 118 L14 108 Z" fill="#4fd1c5"/>
+          <path d="M44 98 L52 118 L42 108 Z" fill="#4fd1c5"/>
+          <path d="M28 4 C40 22 42 50 42 96 L14 96 C14 50 16 22 28 4 Z" fill="url(#bodyG)"/>
+          <path d="M28 4 C36 16 39 30 40 44 L16 44 C17 30 20 16 28 4 Z" fill="#3a4470" opacity=".85"/>
+          <circle cx="28" cy="58" r="7" fill="#0b1020"/>
+          <circle cx="28" cy="58" r="5" fill="#4fd1c5"/>
+          <rect x="18" y="96" width="20" height="10" rx="2" fill="#3a4470"/>
+        </svg>
       </div>
-      <button class="launch" id="launch" type="button" disabled>
-        Launch<span class="n" id="launch-n"></span>
-      </button>
-      <div class="hint" id="hint">載入清單中…</div>
-    </section>
+      <div class="ground"></div>
+      <div class="smoke" style="--dx:-48px"></div>
+      <div class="smoke" style="--dx:48px"></div>
+      <div class="smoke" style="--dx:0px"></div>
+    </div>
+    <button class="launch" id="launch" type="button" disabled>
+      <span id="launch-label">Launch</span><span class="n" id="launch-n"></span>
+    </button>
+    <div class="hint" id="hint">載入清單中…</div>
+  </section>
 
-    <section class="manifest" id="manifest">
-      <div class="manifest-head">
-        <h2>Sites<span class="n" id="count">0</span></h2>
-        <button class="icon-btn" id="edit-btn" type="button" title="編輯清單" aria-label="編輯清單">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-        </button>
-      </div>
-      <ul class="sites" id="list"></ul>
-      <div class="edit-foot" id="edit-foot" hidden>
+  <!-- bottom-left -->
+  <ul class="mini" id="mini"></ul>
+
+  <!-- bottom-right -->
+  <button class="edit-fab" id="edit-btn" type="button" title="編輯清單" aria-label="編輯清單">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+  </button>
+
+  <!-- editor panel -->
+  <div class="panel" id="panel" hidden>
+    <div class="card">
+      <div class="panel-head">
+        <h2>Sites<span class="n" id="edit-count">0</span></h2>
         <button class="btn" id="add-btn" type="button">＋ 新增網站</button>
+      </div>
+      <div class="panel-body" id="edit-list"></div>
+      <div class="panel-foot">
+        <span></span>
         <div class="right">
           <button class="btn" id="cancel-btn" type="button">取消</button>
           <button class="btn primary" id="save-btn" type="button">儲存到 GitHub</button>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <p class="foot" id="foot"></p>
-  </main>
-
+  <!-- token modal -->
   <div class="modal" id="modal" hidden>
     <div class="card">
       <h3>儲存到 GitHub</h3>
@@ -475,19 +464,18 @@
     // ============ state ============
     let sites = [];
     let fileSha = null;
-    let editing = false;
     let draft = [];
     let launched = false;
     const warmState = new Map(); // url -> 'warming' | 'warm' | 'cold'
 
     // ============ dom ============
     const $ = (id) => document.getElementById(id);
-    const listEl = $('list'), countEl = $('count'), launchBtn = $('launch'), launchN = $('launch-n');
-    const hintEl = $('hint'), padEl = $('pad'), manifestEl = $('manifest');
-    const editBtn = $('edit-btn'), editFoot = $('edit-foot'), addBtn = $('add-btn');
-    const cancelBtn = $('cancel-btn'), saveBtn = $('save-btn');
+    const miniEl = $('mini'), launchBtn = $('launch'), launchN = $('launch-n'), launchLabel = $('launch-label');
+    const hintEl = $('hint'), padEl = $('pad');
+    const editBtn = $('edit-btn'), panel = $('panel'), editList = $('edit-list'), editCount = $('edit-count');
+    const addBtn = $('add-btn'), cancelBtn = $('cancel-btn'), saveBtn = $('save-btn');
     const modal = $('modal'), tokenInput = $('token'), modalErr = $('modal-err');
-    const toastEl = $('toast'), footEl = $('foot');
+    const toastEl = $('toast');
 
     // ============ helpers ============
     const hostOf = (url) => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return url; } };
@@ -504,6 +492,7 @@
     };
     const b64encodeUtf8 = (str) => btoa(String.fromCharCode(...new TextEncoder().encode(str)));
     const b64decodeUtf8 = (b64) => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\n/g, '')), c => c.charCodeAt(0)));
+    const isEditing = () => document.body.classList.contains('editing');
 
     let toastTimer;
     function toast(msg, bad = false) {
@@ -514,10 +503,27 @@
       toastTimer = setTimeout(() => toastEl.classList.remove('show'), 3200);
     }
 
+    function setHint(text, cls = '') {
+      hintEl.className = 'hint' + (cls ? ' ' + cls : '');
+      hintEl.textContent = text;
+    }
+    const READY_HINT = '按一下，全部在新分頁開啟';
+
+    function favicon(url, name) {
+      const wrap = document.createElement('div');
+      wrap.className = 'fav';
+      const img = document.createElement('img');
+      img.alt = '';
+      img.src = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(hostOf(url))}&sz=64`;
+      img.onerror = () => { img.remove(); wrap.textContent = (name || '?').charAt(0).toUpperCase(); };
+      wrap.appendChild(img);
+      return wrap;
+    }
+
     // ============ starfield ============
     (function makeStars() {
       const frag = document.createDocumentFragment();
-      for (let i = 0; i < 70; i++) {
+      for (let i = 0; i < 80; i++) {
         const s = document.createElement('span');
         s.style.setProperty('--x', Math.random() * 100 + '%');
         s.style.setProperty('--y', Math.random() * 100 + '%');
@@ -542,16 +548,21 @@
         const parsed = JSON.parse(b64decodeUtf8(data.content));
         if (!Array.isArray(parsed)) throw new Error('sites.json is not an array');
         sites = parsed.map(s => ({ name: s.name || nameFrom(s.url), url: s.url })).filter(s => s.url);
-        footEl.textContent = `${REPO.owner}/${REPO.repo} · sites.json`;
       } catch (e) {
         sites = DEFAULT_SITES.slice();
         fileSha = null;
-        footEl.textContent = `無法從 GitHub 讀取清單，使用內建清單（${e.message}）`;
+        toast(`無法從 GitHub 讀取清單，使用內建清單（${e.message}）`, true);
       }
-      render();
-      warmUp();
+      afterListChange();
+    }
+
+    function afterListChange() {
+      renderMini();
       launchBtn.disabled = sites.length === 0;
-      hintEl.textContent = sites.length ? '按一下，全部在新分頁開啟' : '清單是空的，先新增網站';
+      launched = false;
+      launchLabel.textContent = 'Launch';
+      warmUp();
+      refreshIdleHint();
     }
 
     // ============ warm-up ============
@@ -563,93 +574,165 @@
         fetch(s.url, { mode: 'no-cors', cache: 'no-store' })
           .then(() => warmState.set(s.url, 'warm'))
           .catch(() => warmState.set(s.url, 'cold'))
-          .finally(() => paintWarm(s.url));
+          .finally(() => { paintWarm(s.url); refreshIdleHint(); });
       });
     }
     function paintWarm(url) {
-      const row = listEl.querySelector(`[data-url="${CSS.escape(url)}"]`);
+      const row = miniEl.querySelector(`[data-url="${CSS.escape(url)}"]`);
       if (!row || launched) return;
       const st = warmState.get(url);
       row.classList.remove('warming', 'warm');
-      const label = row.querySelector('.status span');
-      if (st === 'warming') { row.classList.add('warming'); label.textContent = '預熱中'; }
-      else if (st === 'warm') { row.classList.add('warm'); label.textContent = '已就緒'; }
-      else { label.textContent = ''; }
+      if (st === 'warming') { row.classList.add('warming'); row.title = '預熱中'; }
+      else if (st === 'warm') { row.classList.add('warm'); row.title = '已就緒'; }
+      else { row.title = ''; }
+    }
+    function refreshIdleHint() {
+      if (launched) return;
+      if (!sites.length) { setHint('清單是空的，按右下角鉛筆新增'); return; }
+      const warming = sites.filter(s => warmState.get(s.url) === 'warming').map(s => s.name);
+      if (warming.length) setHint(`${warming.join('、')} 預熱中…`, 'warn');
+      else setHint(READY_HINT);
     }
 
-    // ============ render ============
-    function favicon(url, name) {
-      const wrap = document.createElement('div');
-      wrap.className = 'fav';
-      const img = document.createElement('img');
-      img.alt = '';
-      img.src = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(hostOf(url))}&sz=64`;
-      img.onerror = () => { img.remove(); wrap.textContent = (name || '?').charAt(0).toUpperCase(); };
-      wrap.appendChild(img);
-      return wrap;
-    }
-
-    function render() {
-      listEl.innerHTML = '';
-      const data = editing ? draft : sites;
-      countEl.textContent = data.length;
+    // ============ mini list ============
+    function renderMini() {
+      miniEl.innerHTML = '';
       launchN.textContent = sites.length ? `· ${sites.length}` : '';
-      manifestEl.classList.toggle('editing', editing);
-      editFoot.hidden = !editing;
-      editBtn.hidden = editing;
-
-      data.forEach((s, i) => {
+      sites.forEach(s => {
         const li = document.createElement('li');
-        li.className = 'site';
         li.dataset.url = s.url;
-
         li.appendChild(favicon(s.url, s.name));
+        const n = document.createElement('span');
+        n.className = 'name';
+        n.textContent = s.name;
+        li.appendChild(n);
+        const d = document.createElement('i');
+        d.className = 'dot';
+        li.appendChild(d);
+        miniEl.appendChild(li);
+        paintWarm(s.url);
+      });
+    }
 
-        if (editing) {
-          const f = document.createElement('div');
-          f.className = 'edit-fields';
-          const nameIn = document.createElement('input');
-          nameIn.value = s.name; nameIn.placeholder = '名稱';
-          nameIn.addEventListener('input', () => { draft[i].name = nameIn.value; });
-          const urlIn = document.createElement('input');
-          urlIn.className = 'url'; urlIn.value = s.url; urlIn.placeholder = 'https://…';
-          urlIn.addEventListener('input', () => { draft[i].url = urlIn.value; });
-          f.append(nameIn, urlIn);
-          li.appendChild(f);
+    // ============ launch ============
+    launchBtn.addEventListener('click', () => {
+      if (!sites.length) return;
+      // window.open must run synchronously inside the click handler,
+      // otherwise Chrome's popup blocker steps in.
+      const results = sites.map(s => !!window.open(s.url, '_blank'));
+      launched = true;
 
-          const acts = document.createElement('div');
-          acts.className = 'row-actions';
-          acts.append(
-            iconBtn('上移', '<path d="m18 15-6-6-6 6"/>', () => move(i, -1), i === 0),
-            iconBtn('下移', '<path d="m6 9 6 6 6-6"/>', () => move(i, 1), i === data.length - 1),
-            iconBtn('刪除', '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>', () => { draft.splice(i, 1); render(); })
-          );
-          li.appendChild(acts);
-        } else {
-          const t = document.createElement('div');
-          t.innerHTML = `<div class="name"></div><div class="host"></div>`;
-          t.querySelector('.name').textContent = s.name;
-          t.querySelector('.host').textContent = hostOf(s.url);
-          li.appendChild(t);
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      padEl.classList.remove('liftoff');
+      document.body.classList.remove('liftoff');
+      void padEl.offsetWidth; // restart animations on relaunch
+      padEl.classList.add('ignite');
+      launchBtn.disabled = true;
+      setTimeout(() => {
+        padEl.classList.remove('ignite');
+        padEl.classList.add('liftoff');
+        document.body.classList.add('liftoff');
+      }, reduce ? 0 : 450);
 
-          const st = document.createElement('div');
-          st.className = 'status';
-          st.innerHTML = `<span></span><i class="dot"></i>`;
-          li.appendChild(st);
-        }
-        listEl.appendChild(li);
+      const rows = [...miniEl.children];
+      results.forEach((ok, i) => {
+        setTimeout(() => markRow(rows[i], sites[i], ok), reduce ? 0 : 300 + i * 130);
       });
 
-      if (editing && data.length === 0) {
-        const li = document.createElement('li');
-        li.className = 'site';
-        li.style.color = 'var(--muted)';
-        li.textContent = '沒有網站。按下方「新增網站」。';
-        listEl.appendChild(li);
+      const blocked = results.filter(r => !r).length;
+      setTimeout(() => {
+        if (blocked === 0) setHint(`已開啟 ${sites.length} 個網站`, 'ok');
+        else setHint(`${blocked} 個被瀏覽器擋下，點左下角紅色項目開啟`, 'warn');
+        launchBtn.disabled = false;
+        launchLabel.textContent = 'Relaunch';
+      }, reduce ? 0 : 300 + results.length * 130 + 200);
+    });
+
+    function markRow(row, site, ok) {
+      if (!row) return;
+      row.classList.remove('warming', 'warm', 'ok', 'blocked');
+      if (ok) {
+        row.classList.add('ok');
+        row.title = '已開啟';
+        return;
       }
-      if (!editing) sites.forEach(s => paintWarm(s.url));
+      // Swap the <li> for an <a> so the whole row becomes a real link.
+      const a = document.createElement('a');
+      a.className = 'blocked';
+      a.href = site.url; a.target = '_blank'; a.rel = 'noopener';
+      a.dataset.url = site.url;
+      a.title = '被擋下，點此開啟';
+      a.innerHTML = row.innerHTML;
+      a.addEventListener('click', () => { a.classList.replace('blocked', 'ok'); a.title = '已開啟'; });
+      row.replaceWith(a);
     }
 
+    // ============ editor ============
+    function openEditor() {
+      draft = sites.map(s => ({ ...s }));
+      document.body.classList.add('editing');
+      panel.hidden = false;
+      renderEditor();
+    }
+    function closeEditor() {
+      draft = [];
+      document.body.classList.remove('editing');
+      panel.hidden = true;
+      modal.hidden = true;
+    }
+    editBtn.addEventListener('click', openEditor);
+    cancelBtn.addEventListener('click', closeEditor);
+    panel.addEventListener('click', (e) => { if (e.target === panel) closeEditor(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      if (!modal.hidden) modal.hidden = true;
+      else if (isEditing()) closeEditor();
+    });
+    addBtn.addEventListener('click', () => {
+      draft.push({ name: '', url: '' });
+      renderEditor();
+      const inputs = editList.querySelectorAll('input.url');
+      const last = inputs[inputs.length - 1];
+      if (last) { last.focus(); last.scrollIntoView({ block: 'nearest' }); }
+    });
+
+    function renderEditor() {
+      editList.innerHTML = '';
+      editCount.textContent = draft.length;
+      if (!draft.length) {
+        const e = document.createElement('div');
+        e.className = 'empty';
+        e.textContent = '沒有網站。按右上角「新增網站」。';
+        editList.appendChild(e);
+        return;
+      }
+      draft.forEach((s, i) => {
+        const row = document.createElement('div');
+        row.className = 'edit-row';
+        row.appendChild(favicon(s.url, s.name));
+
+        const f = document.createElement('div');
+        f.className = 'edit-fields';
+        const nameIn = document.createElement('input');
+        nameIn.value = s.name; nameIn.placeholder = '名稱（留空會用網域）';
+        nameIn.addEventListener('input', () => { draft[i].name = nameIn.value; });
+        const urlIn = document.createElement('input');
+        urlIn.className = 'url'; urlIn.value = s.url; urlIn.placeholder = 'https://…';
+        urlIn.addEventListener('input', () => { draft[i].url = urlIn.value; });
+        f.append(nameIn, urlIn);
+        row.appendChild(f);
+
+        const acts = document.createElement('div');
+        acts.className = 'row-actions';
+        acts.append(
+          iconBtn('上移', '<path d="m18 15-6-6-6 6"/>', () => move(i, -1), i === 0),
+          iconBtn('下移', '<path d="m6 9 6 6 6-6"/>', () => move(i, 1), i === draft.length - 1),
+          iconBtn('刪除', '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>', () => { draft.splice(i, 1); renderEditor(); })
+        );
+        row.appendChild(acts);
+        editList.appendChild(row);
+      });
+    }
     function iconBtn(label, pathHtml, onClick, disabled = false) {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'icon-btn'; b.title = label; b.setAttribute('aria-label', label);
@@ -662,82 +745,8 @@
       const j = i + d;
       if (j < 0 || j >= draft.length) return;
       [draft[i], draft[j]] = [draft[j], draft[i]];
-      render();
+      renderEditor();
     }
-
-    // ============ launch ============
-    launchBtn.addEventListener('click', () => {
-      if (!sites.length) return;
-      // window.open must run synchronously inside the click handler,
-      // otherwise Chrome's popup blocker steps in.
-      const results = sites.map(s => !!window.open(s.url, '_blank'));
-      launched = true;
-
-      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      padEl.classList.add('ignite');
-      launchBtn.disabled = true;
-      setTimeout(() => {
-        padEl.classList.remove('ignite');
-        padEl.classList.add('liftoff');
-        document.body.classList.add('liftoff');
-      }, reduce ? 0 : 450);
-
-      const rows = [...listEl.querySelectorAll('.site')];
-      results.forEach((ok, i) => {
-        setTimeout(() => markRow(rows[i], sites[i], ok), reduce ? 0 : 300 + i * 130);
-      });
-
-      const blocked = results.filter(r => !r).length;
-      setTimeout(() => {
-        if (blocked === 0) {
-          hintEl.className = 'hint';
-          hintEl.textContent = `已開啟 ${sites.length} 個網站`;
-        } else {
-          hintEl.className = 'hint warn';
-          hintEl.textContent = `${blocked} 個被瀏覽器擋下，點下方紅色項目開啟`;
-        }
-        launchBtn.disabled = false;
-        launchBtn.firstChild.textContent = 'Relaunch';
-      }, reduce ? 0 : 300 + results.length * 130 + 200);
-    });
-
-    function markRow(row, site, ok) {
-      if (!row) return;
-      row.classList.remove('warming', 'warm');
-      const label = row.querySelector('.status span');
-      if (ok) {
-        row.classList.add('ok');
-        label.textContent = '已開啟';
-      } else {
-        row.classList.add('blocked');
-        label.textContent = '被擋 · 點此開啟';
-        // Swap the <li> for an <a> so the whole row becomes a real link.
-        const a = document.createElement('a');
-        a.className = row.className;
-        a.href = site.url; a.target = '_blank'; a.rel = 'noopener';
-        a.dataset.url = site.url;
-        a.innerHTML = row.innerHTML;
-        a.addEventListener('click', () => {
-          a.classList.replace('blocked', 'ok');
-          a.querySelector('.status span').textContent = '已開啟';
-        });
-        row.replaceWith(a);
-      }
-    }
-
-    // ============ edit ============
-    editBtn.addEventListener('click', () => {
-      editing = true;
-      draft = sites.map(s => ({ ...s }));
-      render();
-    });
-    cancelBtn.addEventListener('click', () => { editing = false; draft = []; render(); });
-    addBtn.addEventListener('click', () => {
-      draft.push({ name: '', url: '' });
-      render();
-      const inputs = listEl.querySelectorAll('.edit-fields input.url');
-      inputs[inputs.length - 1]?.focus();
-    });
 
     function cleanDraft() {
       const out = [];
@@ -750,6 +759,7 @@
       return out;
     }
 
+    // ============ save ============
     saveBtn.addEventListener('click', () => {
       try { cleanDraft(); } catch (e) { toast(e.message, true); return; }
       modalErr.textContent = '';
@@ -772,7 +782,10 @@
       try {
         // Make sure we have the current sha (needed to overwrite an existing file).
         if (!fileSha) {
-          const r = await fetch(`${API}?ref=${REPO.branch}`, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }, cache: 'no-store' });
+          const r = await fetch(`${API}?ref=${REPO.branch}`, {
+            headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' },
+            cache: 'no-store'
+          });
           if (r.ok) fileSha = (await r.json()).sha;
         }
         const body = {
@@ -788,19 +801,18 @@
         });
         if (!r.ok) {
           const msg = await r.json().catch(() => ({}));
-          throw new Error(r.status === 401 ? 'token 無效' : r.status === 403 ? 'token 沒有這個 repo 的寫入權限' : r.status === 409 ? '檔案已被別處修改，重新整理後再試' : (msg.message || `GitHub API ${r.status}`));
+          throw new Error(
+            r.status === 401 ? 'token 無效' :
+            r.status === 403 ? 'token 沒有這個 repo 的寫入權限' :
+            r.status === 409 ? '檔案已被別處修改，重新整理後再試' :
+            (msg.message || `GitHub API ${r.status}`)
+          );
         }
         const res = await r.json();
         fileSha = res.content?.sha || fileSha;
         sites = next;
-        editing = false;
-        draft = [];
-        modal.hidden = true;
-        render();
-        warmUp();
-        launchBtn.disabled = sites.length === 0;
-        hintEl.className = 'hint';
-        hintEl.textContent = sites.length ? '按一下，全部在新分頁開啟' : '清單是空的，先新增網站';
+        closeEditor();
+        afterListChange();
         toast('已儲存到 GitHub');
       } catch (e) {
         modalErr.textContent = e.message;
